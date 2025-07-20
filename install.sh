@@ -108,12 +108,97 @@ fi
 echo
 echo "🎉 proto-navi installation complete!"
 echo
+
+# Interactive alias setup
+setup_alias() {
+    echo "${YELLOW}📝 Alias Setup${NC}"
+    echo "========================"
+    echo "Choose an alias for easy proto-navi access:"
+    echo
+    echo "  1) n4vi     - leet-ish shortcut"
+    echo "  2) navi     - easy to remember"
+    echo "  3) pn       - proto-navi abbreviation"
+    echo "  4) nav      - navigation shortcut"
+    echo "  5) nani?    - what? 何 (anime reference)"
+    echo "  6) Skip     - Don't create an alias"
+    echo
+    echo -n "Enter your choice (1-6): "
+    read -r choice
+    
+    local alias_name=""
+    case $choice in
+        1) alias_name="n4vi" ;;
+        2) alias_name="navi" ;;
+        3) alias_name="pn" ;;
+        4) alias_name="nav" ;;
+        5) alias_name="nani?" ;;
+        6) 
+            print_success "Skipping alias creation."
+            print_success "You can run: proto-navi"
+            return
+            ;;
+        *) 
+            print_warning "Invalid choice. Skipping alias creation."
+            return
+            ;;
+    esac
+    
+    # Detect shell and create appropriate alias
+    local shell_rc=""
+    local shell_name
+    
+    # Handle sudo situation
+    if [ -n "$SUDO_USER" ]; then
+        if command -v dscl &>/dev/null; then
+            # macOS
+            USER_SHELL=$(dscl . -read /Users/"$SUDO_USER" UserShell | awk '{print $2}')
+            USER_HOME=$(dscl . -read /Users/"$SUDO_USER" NFSHomeDirectory | awk '{print $2}')
+        else
+            # Linux
+            USER_SHELL=$(getent passwd "$SUDO_USER" | cut -d: -f7)
+            USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+        fi
+        shell_name=$(basename "$USER_SHELL")
+        HOME_DIR="$USER_HOME"
+    else
+        shell_name=$(basename "$SHELL")
+        HOME_DIR="$HOME"
+    fi
+    
+    if [[ "$shell_name" == "zsh" ]]; then
+        shell_rc="$HOME_DIR/.zshrc"
+    elif [[ "$shell_name" == "bash" ]]; then
+        shell_rc="$HOME_DIR/.bashrc"
+        if [[ ! -f "$shell_rc" && -f "$HOME_DIR/.bash_profile" ]]; then
+            shell_rc="$HOME_DIR/.bash_profile"
+        fi
+    else
+        print_warning "Unknown shell ($shell_name). Add manually:"
+        echo "alias '$alias_name'='proto-navi'"
+        return
+    fi
+    
+    # Add alias to shell config (quote alias name for special characters)
+    local alias_line="alias '$alias_name'='proto-navi'"
+    
+    if grep -q "alias $alias_name=" "$shell_rc" 2>/dev/null; then
+        print_warning "Alias '$alias_name' already exists in $shell_rc"
+    else
+        echo "" >> "$shell_rc"
+        echo "# proto-navi alias" >> "$shell_rc"
+        echo "$alias_line" >> "$shell_rc"
+        print_success "Added alias '$alias_name' to $shell_rc"
+        print_success "Restart terminal or run: source $shell_rc"
+        print_success "Then use: $alias_name"
+    fi
+}
+
+# Run alias setup
+setup_alias
+
+echo
 echo "Usage:"
 echo "  proto-navi              # Start file browser"
-echo
-echo "Add an alias for quick access:"
-echo "  echo 'alias nav=\"proto-navi\"' >> ~/.zshrc"
-echo "  echo 'alias nav=\"proto-navi\"' >> ~/.bashrc"
 echo
 echo "View the manual:"
 echo "  man proto-navi"
