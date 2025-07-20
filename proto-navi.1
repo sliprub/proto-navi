@@ -1,0 +1,178 @@
+.TH PROTO-NAVI 1 "July 2025" "proto-navi v0.1.0beta-stable" "User Commands"
+.SH NAME
+proto-navi \- Universal file browser with global keybindings
+.SH SYNOPSIS
+.B proto-navi
+.SH DESCRIPTION
+proto-navi is a universal file browser with terminal-based preview capabilities that work on any file type. It uses fzf for fuzzy finding and provides intelligent previews for different file formats including code, images, videos, PDFs, and data files.
+
+The tool features multi-key sequences similar to Emacs and provides consistent keybindings that work across all file types.
+
+.SH KEYBINDINGS
+.SS Universal Keybindings (work on any file type)
+.TP
+.B ctrl+o
+Open with default application
+.TP
+.B ctrl+p
+QuickLook preview (macOS) - works with all file types
+.TP
+.B ctrl+b
+Browser selection menu (Chrome, Firefox, Safari, etc.)
+.TP
+.B ctrl+i
+Image viewer selection menu (Preview, GIMP, feh, etc.)
+.TP
+.B ctrl+m
+Media player selection menu (QuickTime, VLC, IINA, mpv, etc.)
+.TP
+.B ctrl+v
+Open in Vim
+.TP
+.B ctrl+n
+Open in Nano
+.TP
+.B ctrl+e
+Open in Emacs
+.TP
+.B ctrl+g
+View with Glow (for Markdown files)
+.TP
+.B ctrl+d
+Show in Finder / open enclosing directory
+.TP
+.B ctrl+j
+Navigate down
+.TP
+.B ctrl+k
+Navigate up
+.TP
+.B ctrl+q
+Quit/exit the browser
+
+.SH PREVIEW CAPABILITIES
+proto-navi provides intelligent previews for various file types:
+
+.TP
+.B Markdown files (.md, .markdown)
+Rendered with glow if available, otherwise displayed with bat syntax highlighting
+
+.TP
+.B Code files
+Syntax highlighted preview using bat for Python, Shell, JavaScript, TypeScript, HTML, CSS, C/C++, Java, Rust, Go, Ruby, PHP
+
+.TP
+.B JSON files
+Pretty-printed with jq and syntax highlighted with bat
+
+.TP
+.B YAML files
+Syntax highlighted with bat
+
+.TP
+.B CSV files
+First 20 lines displayed
+
+.TP
+.B XML files
+Syntax highlighted with bat
+
+.TP
+.B PDF files
+Text extracted using pdftotext (first 3 pages, 100 lines)
+
+.TP
+.B Image files
+Terminal preview using viu, chafa, or catimg (if available)
+Supports: SVG, PNG, JPG, JPEG, GIF, BMP, WebP (case-insensitive)
+
+.TP
+.B Video files
+Metadata displayed using ffprobe
+Supports: MP4, MOV, MKV, AVI, WebM, FLV, WMV (case-insensitive)
+
+.TP
+.B Audio files
+Metadata displayed using exiftool
+Supports: MP3, WAV, FLAC, AAC, OGG, M4A (case-insensitive)
+
+.SH APPLICATION SELECTION MENUS
+proto-navi includes sophisticated application selection menus accessed via ctrl+b, ctrl+i, and ctrl+m:
+
+.SS Browser Menu (ctrl+b)
+Safari, Google Chrome, Firefox, Chromium, Qutebrowser, Vieb
+
+.SS Image Viewer Menu (ctrl+i)  
+Preview, Pixelmator Pro, GIMP, Affinity Photo, feh, Eye of GNOME, Gwenview, sxiv, viewer
+
+.SS Media Player Menu (ctrl+m)
+QuickTime Player, VLC, IINA, mpv, mplayer, Totem, Celluloid
+
+.SH DEPENDENCIES
+.SS Required
+.TP
+.B fzf
+Fuzzy finder for file selection
+.TP
+.B find
+File discovery (standard on Unix systems)
+
+.SS Optional (for enhanced previews)
+.TP
+.B bat
+Syntax highlighting for code and data files
+.TP
+.B glow
+Markdown rendering
+.TP
+.B jq
+JSON pretty-printing
+.TP
+.B pdftotext
+PDF text extraction
+.TP
+.B viu, chafa, catimg
+Terminal image viewers
+.TP
+.B ffprobe
+Video metadata extraction
+.TP
+.B exiftool
+Audio metadata extraction
+.TP
+.B qlmanage
+QuickLook preview (macOS)
+
+.SH INSTALLATION
+proto-navi installs to /usr/local/bin/proto-navi with its companion app_selector script at /usr/local/bin/app_selector.
+
+.SH EXAMPLES
+.TP
+Start the file browser in current directory:
+.B proto-navi
+
+.TP
+Navigate and preview files using arrow keys and type to filter
+
+.TP
+Use ctrl+p for QuickLook preview of any file type
+
+.TP
+Use ctrl+b, ctrl+i, ctrl+m to access application selection menus
+
+.SH FILES
+.TP
+.B /usr/local/bin/proto-navi
+Main executable
+.TP
+.B /usr/local/bin/app_selector
+Application selection menu handler
+
+.SH AUTHOR
+Written for universal file browsing with intelligent previews.
+
+.SH SEE ALSO
+.BR fzf (1),
+.BR bat (1),
+.BR glow (1),
+.BR jq (1)
